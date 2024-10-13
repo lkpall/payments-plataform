@@ -1,13 +1,24 @@
+import uvicorn
 from fastapi import FastAPI
 
-from app.routes import users
 from app.db.db import create_db_and_tables
+from app.routes import users
+from app.instance.config import Settings
 
 
-app = FastAPI()
+settings = Settings()
+
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    version=settings.VERSION
+)
 app.include_router(users.app)
 
 
 @app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
+async def on_startup():
+    await create_db_and_tables()
+
+
+if __name__ == '__main__':
+    uvicorn.run("main:app", port=settings.PORT, host=settings.HOST, reload=True)

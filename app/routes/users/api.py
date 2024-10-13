@@ -11,36 +11,36 @@ from app.db.db import SessionDep
 app = APIRouter(prefix="/users")
 
 
-@app.post("/", response_model=UserResponse)
-def create_user(user: User, session: SessionDep):
+@app.post("/", response_model=UserResponse, tags=['user'])
+async def create_user(user: User, session: SessionDep):
     user.password = encrypt_password(user.password)
     session.add(user)
-    session.commit()
-    session.refresh(user)
+    await session.commit()
+    await session.refresh(user)
     return user
 
 
-@app.get("/", response_model=list[UserResponse])
-def read_users(
+@app.get("/", response_model=list[UserResponse], tags=['user'])
+async def read_users(
     session: SessionDep,
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100,
 ):
-    users = session.exec(select(User).offset(offset).limit(limit)).all()
+    users = await session.exec(select(User).offset(offset).limit(limit))
     return users
 
 
-@app.get("/{user_id}", response_model=UserResponse)
-def read_user(user_id: int, session: SessionDep):
-    user = session.get(User, user_id)
+@app.get("/{user_id}", response_model=UserResponse, tags=['user'])
+async def read_user(user_id: int, session: SessionDep):
+    user = await session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
 
-@app.patch("/{user_id}", response_model=UserResponse)
-def read_user(user_id: int, user: User, session: SessionDep):
-    db_user = session.get(User, user_id)
+@app.patch("/{user_id}", response_model=UserResponse, tags=['user'])
+async def read_user(user_id: int, user: User, session: SessionDep):
+    db_user = await session.get(User, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -49,16 +49,16 @@ def read_user(user_id: int, user: User, session: SessionDep):
 
     db_user.sqlmodel_update(new_user_data)
     session.add(db_user)
-    session.commit()
-    session.refresh(db_user)
+    await session.commit()
+    await session.refresh(db_user)
     return user
 
 
-@app.delete("/{user_id}")
-def delete_user(user_id: int, session: SessionDep):
-    user = session.get(User, user_id)
+@app.delete("/{user_id}", tags=['user'])
+async def delete_user(user_id: int, session: SessionDep):
+    user = await session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    session.delete(user)
-    session.commit()
+    await session.delete(user)
+    await session.commit()
     return {"ok": True}

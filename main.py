@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
 
-from app.db.db import create_db_and_tables
-from app.routes import users
+from app.infrastructure.db import create_db_and_tables
+from app.views import users
 from app.instance.config import Settings
 
 
@@ -21,4 +21,4 @@ async def on_startup():
 
 
 if __name__ == '__main__':
-    uvicorn.run("main:app", port=settings.PORT, host=settings.HOST, reload=True)
+    uvicorn.run("main:app", port=settings.PORT, host=settings.HOST, reload=settings.RELOAD)

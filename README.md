@@ -1,6 +1,6 @@
 # payments-plataform
 
-
+fastapi dev main.py
 
 ## Getting started
 

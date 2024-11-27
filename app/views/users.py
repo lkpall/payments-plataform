@@ -4,8 +4,11 @@ from fastapi import HTTPException, Query, APIRouter
 from sqlmodel import select
 
 from app.common.encrypt_passwd import encrypt_password
-from .models import User, UserResponse
-from app.db.db import SessionDep
+
+from app.infrastructure.db import SessionDep
+from app.models.users import User, UserResponse
+
+from app.views.wallet.wallet import create_wallet
 
 
 app = APIRouter(prefix="/users")
@@ -14,9 +17,15 @@ app = APIRouter(prefix="/users")
 @app.post("/", response_model=UserResponse, tags=['user'])
 async def create_user(user: User, session: SessionDep):
     user.password = encrypt_password(user.password)
+
     session.add(user)
-    await session.commit()
+    await session.flush()
     await session.refresh(user)
+
+    new_wallet = create_wallet(user.id)
+    session.add(new_wallet)
+    await session.commit()
+
     return user
 
 

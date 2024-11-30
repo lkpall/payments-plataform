@@ -4,10 +4,8 @@ from fastapi import HTTPException, Query, APIRouter
 from sqlmodel import select
 
 from app.common.encrypt_passwd import encrypt_password
-
 from app.infrastructure.db import SessionDep
 from app.models.users import User, UserResponse
-
 from app.views.wallet.wallet import create_wallet
 
 

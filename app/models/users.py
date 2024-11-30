@@ -8,6 +8,7 @@ class UserBase(SQLModel):
     name: str = Field(nullable=False)
     email: str = Field(nullable=False, unique=True)
     role: int = Field(nullable=True, default=1, foreign_key="user_type.id")
+    status: bool = Field(nullable=False, default=True)
 
 
 class UserResponse(UserBase):

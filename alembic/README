@@ -1,0 +1,2 @@
+Generic single-database configuration with an async dbapi.
+tem q ajustar o caminho do banco no alembic.ini

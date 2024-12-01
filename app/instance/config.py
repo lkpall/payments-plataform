@@ -65,4 +65,4 @@ class TestSettings(Settings):
         return f"{super().DB_BASE}_test"
 
 
-settings = TestSettings() if "pytest" in modules else Settings()
+settings = TestSettings() if "tests" in modules else Settings()

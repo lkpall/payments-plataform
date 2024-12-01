@@ -12,12 +12,17 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION
 )
-app.include_router(users.app)
+app.include_router(users.app, tags=["Users"])
 
 
 @app.on_event("startup")
 async def on_startup():
     await create_db_and_tables()
+
+
+@app.get("/api/healtcheck")
+def root():
+    return {"message": "The API is On!"}
 
 
 if __name__ == '__main__':

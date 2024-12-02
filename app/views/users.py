@@ -1,9 +1,10 @@
 from typing import Annotated
 
 from fastapi import HTTPException, Query, APIRouter, status
-from sqlmodel import select
 
 from sqlalchemy.exc import IntegrityError
+
+from sqlmodel import select
 
 from app.common.encrypt_passwd import encrypt_password
 from app.infrastructure.db import SessionDep

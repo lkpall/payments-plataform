@@ -29,10 +29,12 @@ async def test_create_user_should_return_success(client):
 
 @pytest.mark.anyio
 async def test_create_user_should_return_internal_error(client, mocker):
-    expected_response = {'detail': 'An unexpected error occurred.'}
     mock_create_wallet = mocker.patch('app.views.users.create_wallet')
     mock_create_wallet.side_effect = Exception('Teste')
+
     response = await client.post("/users/", json=BODY)
+    expected_response = {'detail': 'An unexpected error occurred.'}
+
     assert response.status_code == 500
     assert response.json() == expected_response
 

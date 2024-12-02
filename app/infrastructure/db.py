@@ -1,10 +1,12 @@
 from typing import Annotated
 
 from fastapi import Depends
-from sqlmodel import SQLModel
-from sqlmodel.ext.asyncio.session import AsyncSession
+
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
+
+from sqlmodel import SQLModel
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.instance.config import settings
 

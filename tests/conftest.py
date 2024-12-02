@@ -11,6 +11,11 @@ from sqlalchemy import text
 
 from app.models.users import UserType
 
+from unittest.mock import AsyncMock
+
+
+MOCK_SESSION = AsyncMock()
+
 
 @pytest.fixture(scope="session")
 def anyio_backend():
@@ -49,6 +54,7 @@ async def setup_database():
 
 @pytest.fixture(scope="session", autouse=True)
 async def setup():
+    MOCK_SESSION.reset_mock()
     await truncate_tables()
     print("Iniciando os testes...")
     await setup_database()
@@ -67,6 +73,16 @@ async def db_session():
 async def client(db_session):
     async def override_get_session():
         yield db_session
+
+    app.dependency_overrides[get_session] = override_get_session
+
+    async with AsyncClient(transport=ASGITransport(app), base_url=settings.BASE_URL) as test_client:
+        yield test_client
+
+@pytest.fixture(scope="function")
+async def mock_client():
+    async def override_get_session():
+        yield MOCK_SESSION
 
     app.dependency_overrides[get_session] = override_get_session
 

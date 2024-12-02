@@ -1,7 +1,9 @@
 from typing import Annotated
 
-from fastapi import HTTPException, Query, APIRouter
+from fastapi import HTTPException, Query, APIRouter, status
 from sqlmodel import select
+
+from sqlalchemy.exc import IntegrityError
 
 from app.common.encrypt_passwd import encrypt_password
 from app.infrastructure.db import SessionDep
@@ -12,19 +14,31 @@ from app.views.wallet.wallet import create_wallet
 app = APIRouter(prefix="/users")
 
 
-@app.post("/", response_model=UserResponse, tags=['user'])
+@app.post("/", response_model=UserResponse, status_code=201, tags=['user'])
 async def create_user(user: User, session: SessionDep):
-    user.password = encrypt_password(user.password)
+    try:
+        user.password = encrypt_password(user.password)
 
-    session.add(user)
-    await session.flush()
-    await session.refresh(user)
+        session.add(user)
+        await session.flush()
+        await session.refresh(user)
 
-    new_wallet = create_wallet(user.id)
-    session.add(new_wallet)
-    await session.commit()
-
-    return user
+        new_wallet = create_wallet(user.id)
+        session.add(new_wallet)
+        await session.commit()
+        return user
+    except IntegrityError:
+        await session.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="User already exists or violates database constraints.",
+        )
+    except Exception as e:
+        await session.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred.",
+        )
 
 
 @app.get("/", response_model=list[UserResponse], tags=['user'])

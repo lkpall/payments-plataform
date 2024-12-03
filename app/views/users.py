@@ -15,7 +15,7 @@ from app.views.wallet.wallet import create_wallet
 app = APIRouter(prefix="/users")
 
 
-@app.post("/", response_model=UserResponse, status_code=201, tags=['user'])
+@app.post("/", response_model=UserResponse, status_code=201)
 async def create_user(user: User, session: SessionDep):
     try:
         user.password = encrypt_password(user.password)
@@ -42,7 +42,7 @@ async def create_user(user: User, session: SessionDep):
         )
 
 
-@app.get("/", response_model=list[UserResponse], tags=['user'])
+@app.get("/", response_model=list[UserResponse])
 async def read_users(
     session: SessionDep,
     offset: int = 0,
@@ -52,7 +52,7 @@ async def read_users(
     return users
 
 
-@app.get("/{user_id}", response_model=UserResponse, tags=['user'])
+@app.get("/{user_id}", response_model=UserResponse)
 async def read_user(user_id: int, session: SessionDep):
     user = await session.get(User, user_id)
     if not user:
@@ -60,7 +60,7 @@ async def read_user(user_id: int, session: SessionDep):
     return user
 
 
-@app.patch("/{user_id}", response_model=UserResponse, tags=['user'])
+@app.patch("/{user_id}", response_model=UserResponse)
 async def read_user(user_id: int, user: User, session: SessionDep):
     db_user = await session.get(User, user_id)
     if not db_user:
@@ -76,7 +76,7 @@ async def read_user(user_id: int, user: User, session: SessionDep):
     return user
 
 
-@app.delete("/{user_id}", tags=['user'])
+@app.delete("/{user_id}")
 async def delete_user(user_id: int, session: SessionDep):
     user = await session.get(User, user_id)
     if not user:

@@ -3,7 +3,8 @@ import pytest
 from httpx import AsyncClient, ASGITransport
 
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from sqlmodel import SQLModel
@@ -39,6 +40,7 @@ TestingSessionLocal = sessionmaker(
 
 async def truncate_tables():
     async with async_engine.connect() as conn:
+        await conn.execute(text("DELETE FROM _user;"))
         await conn.execute(text("ALTER SEQUENCE _user_id_seq RESTART WITH 1;"))
         await conn.execute(text("DELETE FROM user_type;"))
         await conn.commit()

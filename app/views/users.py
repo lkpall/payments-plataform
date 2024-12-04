@@ -66,21 +66,22 @@ async def read_user(user_id: int, user: User, session: SessionDep):
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    user.password = encrypt_password(user.password)
-    new_user_data = user.model_dump(exclude_unset=True)
+    if user.password:
+        user.password = encrypt_password(user.password)
 
+    new_user_data = user.model_dump(exclude_unset=True)
     db_user.sqlmodel_update(new_user_data)
     session.add(db_user)
     await session.commit()
     await session.refresh(db_user)
-    return user
+    return db_user
 
 
-@app.delete("/{user_id}")
+@app.delete("/{user_id}", status_code=204)
 async def delete_user(user_id: int, session: SessionDep):
     user = await session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     await session.delete(user)
     await session.commit()
-    return {"ok": True}
+    return {}

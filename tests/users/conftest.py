@@ -1,6 +1,6 @@
 import pytest
 
-from tests.conftest import TestingSessionLocal, db_session
+from tests.conftest import db_session
 
 from app.models.users import User
 

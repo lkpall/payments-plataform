@@ -3,7 +3,6 @@ import logging
 from fastapi import APIRouter
 
 from app.infrastructure.db import SessionDep
-
 from app.models.transaction import (
     Transaction,
     TransactionRequest,
@@ -11,7 +10,6 @@ from app.models.transaction import (
     TransactionStatus,
     TransactionType
 )
-
 from app.utils.payments import (
     authorize_transaction,
     check_payer_balance_is_valid,

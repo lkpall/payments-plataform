@@ -1,14 +1,10 @@
-import uuid
-
 import enum
-
+import uuid
+from datetime import datetime
+from decimal import Decimal
 from typing import Optional
 
-from datetime import datetime
-
-from decimal import Decimal
-
-from sqlmodel import Field, SQLModel, Relationship, Enum, Column
+from sqlmodel import Column, Enum, Field, Relationship, SQLModel
 
 
 class TransactionType(str, enum.Enum):

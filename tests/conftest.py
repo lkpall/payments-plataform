@@ -1,22 +1,17 @@
+from unittest.mock import AsyncMock
+
 import pytest
-
-from httpx import AsyncClient, ASGITransport
-
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
-from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import sessionmaker
-
 from sqlmodel import SQLModel
-
-from unittest.mock import AsyncMock
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.infrastructure.db import get_session
 from app.instance.config import settings
 from app.models.users import UserType
-
 from main import app
-
 
 MOCK_SESSION = AsyncMock()
 

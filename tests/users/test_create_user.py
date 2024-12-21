@@ -1,9 +1,7 @@
 import pytest
-
 from sqlalchemy.exc import IntegrityError
 
 from tests.conftest import MOCK_SESSION
-
 
 BODY = {
     'name': 'Matheus',

@@ -1,9 +1,7 @@
 from typing import Annotated, List
 
-from fastapi import HTTPException, Query, APIRouter, status
-
+from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
-
 from sqlmodel import select
 
 from app.common.encrypt_passwd import encrypt_password

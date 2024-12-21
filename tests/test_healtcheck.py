@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.mark.anyio
 async def test_create_user(client):
     response = await client.get("/api/healtcheck")

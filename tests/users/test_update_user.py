@@ -1,6 +1,5 @@
 import pytest
 
-
 BODY = {
     'name': 'Matheus',
     'email': 'mfpo159@hotmail.com',

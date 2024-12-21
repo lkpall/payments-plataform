@@ -1,19 +1,13 @@
-import httpx
-
 from decimal import Decimal
 
+import httpx
 from fastapi import HTTPException
-
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload
 
 from app.infrastructure.db import SessionDep
-
-from app.models.transaction import (
-    Transaction,
-    TransactionStatus,
-)
+from app.models.transaction import Transaction, TransactionStatus
 from app.models.users import User
 from app.models.wallet import Wallet
 

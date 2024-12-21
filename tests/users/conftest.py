@@ -1,8 +1,8 @@
 import pytest
 
+from app.models.users import User
 from tests.conftest import db_session
 
-from app.models.users import User
 
 @pytest.fixture(scope="function")
 async def create_user_fixture(db_session):

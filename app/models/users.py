@@ -1,6 +1,8 @@
 from typing import Optional
 
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
+
+from .wallet import Wallet
 
 
 class UserBase(SQLModel):
@@ -19,6 +21,8 @@ class User(UserBase, table=True):
     __tablename__ = "_user"
     registro_nacional: str = Field(nullable=False, unique=True)
     password: str = Field(nullable=False)
+
+    wallet: Wallet = Relationship(back_populates="user")
 
 
 class UserType(SQLModel, table=True):

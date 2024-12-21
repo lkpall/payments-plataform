@@ -1,8 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from app.infrastructure.db import create_db_and_tables
-from app.views import users
+from app.views import users, payments
 from app.instance.config import Settings
 
 
@@ -13,11 +12,7 @@ app = FastAPI(
     version=settings.VERSION
 )
 app.include_router(users.app, tags=["Users"])
-
-
-@app.on_event("startup")
-async def on_startup():
-    await create_db_and_tables()
+app.include_router(payments.router, tags=["Payments"])
 
 
 @app.get("/api/healtcheck")

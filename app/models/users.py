@@ -19,7 +19,7 @@ class UserResponse(UserBase):
 
 class User(UserBase, table=True):
     __tablename__ = "_user"
-    registro_nacional: str = Field(nullable=False, unique=True)
+    identity_number: str = Field(nullable=False, unique=True)
     password: str = Field(nullable=False)
 
     wallet: Wallet = Relationship(back_populates="user")

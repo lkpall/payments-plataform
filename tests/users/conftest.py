@@ -8,7 +8,7 @@ async def create_user_fixture(db_session):
     user = User(
         name='Bruno',
         email='bruno@gmail.com',
-        registro_nacional='01895142681',
+        identity_number='01895142681',
         password='batatinha'
     )
     db_session.add(user)

@@ -4,7 +4,7 @@ BODY = {
     'name': 'Matheus',
     'email': 'mfpo159@hotmail.com',
     'role': 1,
-    'registro_nacional': '01869781104',
+    'identity_number': '01869781104',
     'password': 'batatinha'
 }
 

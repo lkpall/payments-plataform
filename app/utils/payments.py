@@ -38,7 +38,8 @@ async def get_user(session: SessionDep, user_id: int) -> User:
 
 
 async def check_payer_balance_is_valid(user: User, amount: Decimal):
-    """Checks whether the payer's wallet has sufficient balance to carry out the transaction
+    """Checks whether the payer's wallet has sufficient balance
+        to carry out the transaction
 
     Args:
         user (User): user instance
@@ -66,7 +67,9 @@ async def authorize_transaction(
     """
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get('https://util.devi.tools/api/v2/authorize', timeout=5)
+            response = await client.get(
+                'https://util.devi.tools/api/v2/authorize', timeout=5
+            )
             is_authorized = response.json()['data']['authorization']
 
         if not is_authorized:

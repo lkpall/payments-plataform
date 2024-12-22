@@ -11,6 +11,7 @@ BODY = {
     'password': 'batatinha'
 }
 
+
 @pytest.mark.anyio
 async def test_create_user_should_return_success(client):
     response = await client.post("/users/", json=BODY)
@@ -41,10 +42,14 @@ async def test_create_user_should_return_internal_error(client, mocker):
 async def test_create_user_should_return_integrity_error(mock_client, mocker):
     body = BODY.copy()
     body.update({'id': 1})
-    MOCK_SESSION.commit.side_effect = IntegrityError('teste', {'test': 't'}, Exception('Error'))
+    MOCK_SESSION.commit.side_effect = IntegrityError(
+        'teste', {'test': 't'}, Exception('Error')
+    )
 
     response = await mock_client.post("/users/", json=body)
-    expected_response = {'detail': 'User already exists or violates database constraints.'}
+    expected_response = {
+        'detail': 'User already exists or violates database constraints.'
+    }
 
     assert response.status_code == 409
     assert response.json() == expected_response

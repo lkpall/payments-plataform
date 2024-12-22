@@ -1,7 +1,6 @@
 import pytest
 
 from app.models.users import User
-from tests.conftest import db_session
 
 
 @pytest.fixture(scope="function")

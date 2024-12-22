@@ -1,7 +1,5 @@
 import pytest
 
-from tests.conftest import MOCK_SESSION
-
 
 @pytest.mark.anyio
 async def test_get_user_by_id_should_return_success(client, create_user_fixture):

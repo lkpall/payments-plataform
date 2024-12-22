@@ -12,9 +12,9 @@ class Wallet(SQLModel, table=True):
     balance: Decimal = Field(default=0, max_digits=5, decimal_places=3)
     user_id: int = Field(nullable=False, foreign_key="_user.id")
 
-    user: "User" = Relationship(back_populates="wallet")
+    user: "User" = Relationship(back_populates="wallet")  # NOQA
 
-    transaction_history_payer: List["Transaction"] = Relationship(
+    transaction_history_payer: List["Transaction"] = Relationship( # NOQA
         back_populates="sender_wallet",
         sa_relationship_kwargs={
             "lazy": "selectin",
@@ -22,7 +22,7 @@ class Wallet(SQLModel, table=True):
             "foreign_keys": "Transaction.sender_wallet_id"
         },
     )
-    transaction_history_payee: List["Transaction"] = Relationship(
+    transaction_history_payee: List["Transaction"] = Relationship(  # NOQA
         back_populates="recipient_wallet",
         sa_relationship_kwargs={
             "lazy": "selectin",

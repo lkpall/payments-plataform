@@ -30,23 +30,31 @@ class Transaction(SQLModel, table=True):
     )
     amount: Decimal = Field(nullable=False, max_digits=10, decimal_places=2)
     type: TransactionType = Field(
-        sa_column=Column(Enum(TransactionType, name="transaction_type", native_enum=True), nullable=False),
+        sa_column=Column(
+            Enum(TransactionType, name="transaction_type", native_enum=True),
+            nullable=False
+        ),
     )
     status: TransactionStatus = Field(
-        sa_column=Column(Enum(TransactionStatus, name="transaction_status", native_enum=True), nullable=False),
+        sa_column=Column(
+            Enum(TransactionStatus, name="transaction_status", native_enum=True),
+            nullable=False
+        ),
     )
     sender_wallet_id: uuid.UUID = Field(nullable=False, foreign_key="wallet.id")
     recipient_wallet_id: uuid.UUID = Field(nullable=False, foreign_key="wallet.id")
-    timestamp: Optional[datetime] = Field(nullable=False, default_factory=datetime.utcnow)
+    timestamp: Optional[datetime] = Field(
+        nullable=False, default_factory=datetime.utcnow
+    )
 
-    sender_wallet: Optional['Wallet'] = Relationship(
+    sender_wallet: Optional['Wallet'] = Relationship(  # NOQA
         back_populates="transaction_history_payer",
         sa_relationship_kwargs={
             "lazy": "selectin",
             "foreign_keys": "Transaction.sender_wallet_id"
         },
     )
-    recipient_wallet: Optional['Wallet'] = Relationship(
+    recipient_wallet: Optional['Wallet'] = Relationship(  # NOQA
         back_populates="transaction_history_payee",
         sa_relationship_kwargs={
             "lazy": "selectin",

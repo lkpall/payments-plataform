@@ -45,7 +45,7 @@ async def create_user(user: User, session: SessionDep):
             status_code=status.HTTP_409_CONFLICT,
             detail="User already exists or violates database constraints.",
         )
-    except Exception as e:
+    except Exception:
         await session.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -96,7 +96,7 @@ async def read_user(user_id: int, session: SessionDep):
 
 
 @app.patch("/{user_id}", response_model=UserResponse)
-async def read_user(user_id: int, user: User, session: SessionDep):
+async def update_user(user_id: int, user: User, session: SessionDep):
     """Update information for a specific user
 
     Args:

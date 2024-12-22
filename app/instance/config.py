@@ -44,7 +44,7 @@ class Settings(BaseSettings):
         :return: Database URL.
         """
 
-        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_BASE}"
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_BASE}"  # noqa
 
     class Config:
         env_file = f"{BASE_DIR}/.env"

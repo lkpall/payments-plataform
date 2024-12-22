@@ -21,4 +21,9 @@ def root():
 
 
 if __name__ == '__main__':
-    uvicorn.run("main:app", port=settings.PORT, host=settings.HOST, reload=settings.RELOAD)
+    uvicorn.run(
+        "main:app",
+        host=settings.HOST,
+        port=settings.PORT,
+        reload=settings.RELOAD
+    )

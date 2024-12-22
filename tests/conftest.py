@@ -10,6 +10,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.infrastructure.db import get_session
 from app.instance.config import settings
+from app.models import *  # NOQA
 from app.models.users import UserType
 from main import app
 
@@ -19,6 +20,7 @@ MOCK_SESSION = AsyncMock()
 @pytest.fixture(scope="session")
 def anyio_backend():
     return "asyncio"
+
 
 async_engine = create_async_engine(
     settings.DB_URL,
@@ -33,6 +35,7 @@ TestingSessionLocal = sessionmaker(
     class_=AsyncSession
 )
 
+
 async def truncate_tables():
     async with async_engine.connect() as conn:
         await conn.execute(text("DELETE FROM _user;"))
@@ -40,8 +43,10 @@ async def truncate_tables():
         await conn.execute(text("DELETE FROM user_type;"))
         await conn.commit()
 
+
 async def setup_database():
     async with async_engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.drop_all)
         await conn.run_sync(SQLModel.metadata.create_all)
 
     async with TestingSessionLocal() as session:
@@ -52,6 +57,7 @@ async def setup_database():
         session.add(user_type)
         await session.commit()
 
+
 @pytest.fixture(scope="session", autouse=True)
 async def setup():
     MOCK_SESSION.reset_mock()
@@ -59,6 +65,7 @@ async def setup():
     print("Iniciando os testes...")
     await setup_database()
     yield
+
 
 @pytest.fixture(scope="function")
 async def db_session():
@@ -69,6 +76,7 @@ async def db_session():
                 await session.rollback()
                 await transaction.rollback()
 
+
 @pytest.fixture(scope="function")
 async def client(db_session):
     async def override_get_session():
@@ -76,8 +84,11 @@ async def client(db_session):
 
     app.dependency_overrides[get_session] = override_get_session
 
-    async with AsyncClient(transport=ASGITransport(app), base_url=settings.BASE_URL) as test_client:
+    async with AsyncClient(
+        transport=ASGITransport(app), base_url=settings.BASE_URL
+    ) as test_client:
         yield test_client
+
 
 @pytest.fixture(scope="function")
 async def mock_client():
@@ -86,5 +97,7 @@ async def mock_client():
 
     app.dependency_overrides[get_session] = override_get_session
 
-    async with AsyncClient(transport=ASGITransport(app), base_url=settings.BASE_URL) as test_client:
+    async with AsyncClient(
+        transport=ASGITransport(app), base_url=settings.BASE_URL
+    ) as test_client:
         yield test_client

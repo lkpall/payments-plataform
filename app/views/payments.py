@@ -21,7 +21,8 @@ router = APIRouter(prefix="/transfer")
 
 logger = logging.getLogger("transactions_router")
 
-@router.post('/', response_model=TransactionResponse)
+
+@router.post('/', response_model=TransactionResponse, status_code=201)
 async def transaction(transfer_data: TransactionRequest, session: SessionDep):
     """Performs banking transactions between payer and receiver accounts
 
